@@ -1,4 +1,4 @@
-# Map For
+# for-map
 
 A Clojure library that provides a map-comprehension macro.
 
