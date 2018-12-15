@@ -1,4 +1,15 @@
+*.class
+*.jar
+.hg/
+.hgignore
 /.cpcache
-/.nrepl-*
+/.lein-*
+/.nrepl-history
+/.nrepl-port
+/checkouts
+/classes
 /target
-test/fixtures/
+/test/fixtures
+resources/REBL-*
+pom.xml
+pom.xml.asc
