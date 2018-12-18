@@ -18,7 +18,7 @@ A Clojure library that provides a map-comprehension macro.
 Add the following to your deps.edn:
 
 ```clojure
-{jayzawrotny/for-map {:mvn/version "0.1.0"}}
+{jayzawrotny/for-map {:mvn/version "0.1.1"}}
 ```
 
 ### Leiningen
@@ -26,7 +26,7 @@ Add the following to your deps.edn:
 Add the following to your project.clj:
 
 ```clojure
-[jayzawrotny/for-map "0.1.0"]
+[jayzawrotny/for-map "0.1.1"]
 ```
 
 ## Usage
