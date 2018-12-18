@@ -7,4 +7,13 @@
                                org.clojure/core.async {:mvn/version "0.4.490"}}
                   :main-opts ["-m" "nrepl.cmdline"
                               "--interactive"
-                              "--middleware" "[nrebl.middleware/wrap-nrebl,cider.nrepl/cider-middleware]"]}}}
+                              "--middleware" "[nrebl.middleware/wrap-nrebl,cider.nrepl/cider-middleware]"]}
+           :test {:extra-paths ["test"]
+                  :extra-deps {org.clojure/test.check {:mvn/version "RELEASE"}}}
+           :runner
+           {:extra-deps {com.cognitect/test-runner
+                         {:git/url "https://github.com/cognitect-labs/test-runner"
+                          :sha "76568540e7f40268ad2b646110f237a60295fa3c"}}
+            :main-opts ["-m" "cognitect.test-runner"
+                        "-d" "test"
+                        "-r" ".*\\.test\\..*"]}}}

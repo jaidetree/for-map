@@ -3,34 +3,24 @@
             [clojure.string :refer [replace]])
   (:refer-clojure :exclude [replace]))
 
-;; Replicates the functionality of the python snippet
+(defmacro for-map
+ "Hash-map comprehension. Takes a vector of one or more
+ binding-form/collection-expr pairs, each followed by zero or more
+ modifiers, and a map with a key form and value form and returns a hash-map.
+ Collections are iterated in a nested fashion, rightmost fastest,
+ and nested coll-exprs can refer to bindings created in prior
+ binding-forms. Supported modifiers are: :let [binding-form expr ...],
+ :while test, :when test.
 
-(defn relative-name
-  [path dir]
-  (let [dir-path (str dir)]
-    (str-replace dir-path (re-pattern path) "")))
-
-(defn directory-with-no-files?
-  [[file dirs files]]
-  (empty? files))
-
-(defn pair-file-with-dirs
-  [root-path [file dirs]]
-  [(relative-name root-path (.getPath file))
-   (vec dirs)])
-
-(defn dir->map
-  [root-path]
-  (->> (file-tree-seq root-path)
-       (drop 1)
-       (filter directory-with-no-files?)
-       (map #(pair-file-with-dirs root-path %))
-       (into {})
-       (clojure.pprint/pprint)))
-
-(defn -main
-  [dir & args]
-  (dir->map dir))
+ (for-map [x (range 5)]
+   {x (* x x)})"
+  [seq-expers body-map]
+  (let [[key-form value-form] (first body-map)]
+    `(into
+       {}
+       (for ~seq-expers
+         [~key-form ~value-form]))))
 
 (comment
- (dir->map "/Users/jay/Projects/map-for/test/fixtures"))
+ (for-map [x (range 10)]
+   {x (get "abcdefghijklmnopqrstuvwxyz" x)}))
