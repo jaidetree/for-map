@@ -3,18 +3,26 @@
             [clojure.string :refer [replace]])
   (:refer-clojure :exclude [replace]))
 
-(defn- err
-  [& msg]
-  (throw (IllegalArgumentException. ^String (apply str msg))))
-
 (defn- validate-args
-  [seq-expers body-map]
-  (->> (when-not (and (vector? seq-expers))
-                 (> (count seq-expers) 1)
-         "Invalid 'seq-expers' must be a binding vector of binding forms")
-       (when-not (and (map? body-map)
-                      (= 1 (count body-map)))
-         "Invalid 'body-map' must be a hash-map of only 1 key-value pair.")))
+  "Takes the same args as for-map and returns a list of errors. nil errors
+  are filtered out"
+  [bindings body-map]
+  (keep
+   identity
+   [(when-not (and (vector? bindings)
+                   (> (count bindings) 1)
+                   (zero? (mod (count bindings) 2)))
+      ;; Using str for future compatability with cljs
+      (str
+       "Invalid 'bindings' must be at least one pair of binding forms. Got '"
+       bindings
+       "'"))
+    (when-not (and (map? body-map)
+                   (= 1 (count body-map)))
+      (str
+       "Invalid 'body-map' must be a hash-map of only 1 key-value pair. Got '"
+       body-map
+       "'"))]))
 
 (defmacro for-map
  "Hash-map comprehension. Takes a vector of one or more
@@ -27,16 +35,20 @@
 
  (for-map [x (range 5)]
    {x (* x x)})"
-  [seq-expers body-map]
-  (when-let [err-msg (validate-args seq-expers body-map)]
-    (err err-msg))
+  [bindings body-map]
+  (when-first [err-msg (validate-args bindings body-map)]
+    (throw (IllegalArgumentException. ^String (str err-msg))))
   (let [[key-form value-form] (first body-map)]
     `(into
        {}
-       (for ~seq-expers
+       (for ~bindings
          [~key-form ~value-form]))))
 
 (comment
  (for-map [x (range 10)]
    {x (get "abcdefghijklmnopqrstuvwxyz" x)})
- (for-map [x] {}))
+ (for-map [] {})
+ (for-map [x] {x 2})
+ (for-map [x (range 3)] {x 2 y x})
+ (for-map [x ^clojure.lang.Sequential (range 3)] {x 2})
+ (for-map [x (range 3)] {x ^String (str "hi")}))
