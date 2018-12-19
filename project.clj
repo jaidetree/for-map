@@ -1,4 +1,4 @@
-(defproject jayzawrotny/for-map "0.1.1-SNAPSHOT"
+(defproject jayzawrotny/for-map "0.1.1"
   :description "A Clojure library to provide a hash-map comprehension macro"
   :url "https://github.com/jayzawrotny/for-map"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
