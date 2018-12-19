@@ -3,6 +3,19 @@
             [clojure.string :refer [replace]])
   (:refer-clojure :exclude [replace]))
 
+(defn- err
+  [& msg]
+  (throw (IllegalArgumentException. ^String (apply str msg))))
+
+(defn- validate-args
+  [seq-expers body-map]
+  (->> (when-not (and (vector? seq-expers))
+                 (> (count seq-expers) 1)
+         "Invalid 'seq-expers' must be a binding vector of binding forms")
+       (when-not (and (map? body-map)
+                      (= 1 (count body-map)))
+         "Invalid 'body-map' must be a hash-map of only 1 key-value pair.")))
+
 (defmacro for-map
  "Hash-map comprehension. Takes a vector of one or more
  binding-form/collection-expr pairs, each followed by zero or more
@@ -15,6 +28,8 @@
  (for-map [x (range 5)]
    {x (* x x)})"
   [seq-expers body-map]
+  (when-let [err-msg (validate-args seq-expers body-map)]
+    (err err-msg))
   (let [[key-form value-form] (first body-map)]
     `(into
        {}
@@ -23,4 +38,5 @@
 
 (comment
  (for-map [x (range 10)]
-   {x (get "abcdefghijklmnopqrstuvwxyz" x)}))
+   {x (get "abcdefghijklmnopqrstuvwxyz" x)})
+ (for-map [x] {}))
