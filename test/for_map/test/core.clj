@@ -1,6 +1,7 @@
 (ns for-map.test.core
   (:require [for-map.core :refer :all]
-            [clojure.test :refer :all]))
+            [clojure.test :refer :all]
+            [for-map.test.support]))
 
 (deftest for-map-test
   (testing "for-map returns a hash-map with no modifiers"
@@ -40,6 +41,18 @@
             1 1
             2 4
             3 9}))))
+
+(deftest for-map-invalid-bindings-test
+  (testing "for-map throws error with invalid bindings"
+    (is (thrown-in-macro? IllegalArgumentException `(for-map [] {})))
+    (is (thrown-in-macro? IllegalArgumentException `(for-map [x] {x x})))))
+
+(deftest for-map-invalid-body-map-test
+  (testing "for-map throws error with invalid body-map"
+    (is (thrown-in-macro? IllegalArgumentException `(for-map [x (range 3)]
+                                                      {})))
+    (is (thrown-in-macro? IllegalArgumentException `(for-map [x (range 3)]
+                                                      {x x :a 2})))))
 
 (comment
  (run-tests))
