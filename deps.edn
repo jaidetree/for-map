@@ -4,13 +4,10 @@
                   :main-opts ["-m" "nrepl.cmdline"
                               "--interactive"
                               "--middleware" "[nrebl.middleware/wrap-nrebl]"]}
-           :rebl {:extra-deps {com.cognitect.rebl {:local/root "./resources/REBL-0.9.109.jar"}
-                               rickmoynihan/rebl.middleware {:local/root "../nrebl.middleware"}
-                               org.clojure/clojure {:mvn/version "1.10.0-RC5"}
-                               org.clojure/core.async {:mvn/version "0.4.490"}}
+           :nrebl {:extra-deps {rickmoynihan/rebl.middleware {:local/root "../nrebl.middleware"}}}
                   :main-opts ["-m" "nrepl.cmdline"
                               "--interactive"
-                              "--middleware" "[nrebl.middleware/wrap-nrebl,cider.nrepl/cider-middleware]"]}
+                              "--middleware" "[nrebl.middleware/wrap-nrebl,cider.nrepl/cider-middleware]"]
            :test {:extra-paths ["test"]
                   :extra-deps {org.clojure/test.check {:mvn/version "RELEASE"}}}
            :runner
