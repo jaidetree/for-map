@@ -1,6 +1,5 @@
 (ns for-map.test.support
-  (:require [clojure.test :refer [assert-expr do-report]]
-            [clojure.datafy :refer [datafy]])
+  (:require [clojure.test :refer [assert-expr do-report]])
   (:import (clojure.lang Compiler$CompilerException)))
 
 (defmethod assert-expr 'thrown-in-macro? [msg form]
@@ -15,7 +14,7 @@
                       :expected '~form
                       :actual nil})
           (catch Compiler$CompilerException e#
-            (let [actual-class# (-> e# datafy :via last :type resolve)]
+            (let [actual-class# (-> e# Throwable->map :via last :type resolve)]
               (if (identical? ~expected-class actual-class#)
                 (do-report {:type :pass
                             :message ~msg
